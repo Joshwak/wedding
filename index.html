@@ -120,7 +120,7 @@
       </svg>
 
       <!-- Header Intro -->
-      <p id="dispIntro" class="text-[11px] sm:text-xs tracking-[0.25em] uppercase text-[#7a7064] max-w-xs leading-relaxed mt-4 mb-6">
+      <p class="text-[11px] sm:text-xs tracking-[0.25em] uppercase text-[#7a7064] max-w-xs leading-relaxed mt-4 mb-6">
         TOGETHER WITH THEIR FAMILIES
       </p>
 
@@ -136,7 +136,7 @@
       </div>
 
       <!-- Invitation Line -->
-      <p id="dispTagline" class="text-[11px] sm:text-xs tracking-[0.22em] uppercase text-[#7a7064] mt-6 mb-8 max-w-xs leading-relaxed">
+      <p class="text-[11px] sm:text-xs tracking-[0.22em] uppercase text-[#7a7064] mt-6 mb-8 max-w-xs leading-relaxed">
         INVITE YOU TO THEIR WEDDING CELEBRATION
       </p>
 
@@ -249,7 +249,7 @@
           </div>
 
           <button type="submit" class="w-full bg-[#8c6d3b] hover:bg-[#73582d] text-white text-xs uppercase tracking-widest py-3 rounded-lg font-medium transition shadow-sm">
-            Send RSVP via WhatsApp
+            Submit RSVP Confirmation
           </button>
         </form>
       </div>
@@ -269,13 +269,12 @@
   </main>
 
   <script>
-    const defaultData = {
+    const invitationData = {
       groom: "Joshwa",
       bride: "Ribeca",
       mainDate: "2026-12-11",
       venue: "Royal Palm Hall",
       city: "Main Boulevard, Lahore",
-      phone: "",
       events: [
         { title: "Mehndi Night", date: "Tuesday, Dec 9, 2026", time: "7:00 PM Onwards", venue: "Royal Palm Lawn A" },
         { title: "Barat Celebration", date: "Wednesday, Dec 10, 2026", time: "8:00 PM Onwards", venue: "Grand Marquee Hall" },
@@ -283,55 +282,24 @@
       ]
     };
 
-    let state = { ...defaultData };
+    function initCard() {
+      document.getElementById("summaryVenue").textContent = invitationData.venue;
+      document.getElementById("summaryCity").textContent = invitationData.city;
+      document.title = `Wedding Invitation | ${invitationData.groom} & ${invitationData.bride}`;
 
-    function loadState() {
-      const params = new URLSearchParams(window.location.search);
-      const saved = localStorage.getItem("weddingCardState_v6");
-      if (saved) {
-        try { state = JSON.parse(saved); } catch(e) {}
+      if (invitationData.events && invitationData.events[2]) {
+        document.getElementById("summaryDate").textContent = invitationData.events[2].date.toUpperCase();
+        document.getElementById("summaryTime").textContent = invitationData.events[2].time.toUpperCase();
       }
 
-      if (params.get("g")) state.groom = params.get("g");
-      if (params.get("b")) state.bride = params.get("b");
-      if (params.get("d")) state.mainDate = params.get("d");
-      if (params.get("v")) state.venue = params.get("v");
-      if (params.get("c")) state.city = params.get("c");
-      if (params.get("p")) state.phone = params.get("p");
-      if (params.get("ev")) {
-        try { state.events = JSON.parse(decodeURIComponent(params.get("ev"))); } catch(e) {}
-      }
-
-      renderCard();
-    }
-
-    function formatSwashName(name) {
-      const clean = (name || "Name").trim();
-      const first = clean.charAt(0).toUpperCase();
-      const rest = clean.slice(1).toUpperCase();
-      return `<span class="initial-swash">${first}</span><span class="name-rest">${rest}</span>`;
-    }
-
-    function renderCard() {
-      document.getElementById("dispGroom").innerHTML = formatSwashName(state.groom);
-      document.getElementById("dispBride").innerHTML = formatSwashName(state.bride);
-      document.getElementById("summaryVenue").textContent = state.venue;
-      document.getElementById("summaryCity").textContent = state.city;
-      document.title = `Wedding Invitation | ${state.groom} & ${state.bride}`;
-
-      if (state.events && state.events[2]) {
-        document.getElementById("summaryDate").textContent = state.events[2].date.toUpperCase();
-        document.getElementById("summaryTime").textContent = state.events[2].time.toUpperCase();
-      }
-
-      document.getElementById("mapBtn").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(state.venue + ' ' + state.city)}`;
+      document.getElementById("mapBtn").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(invitationData.venue + ' ' + invitationData.city)}`;
 
       const evBox = document.getElementById("eventsContainer");
       const rsvpCheck = document.getElementById("rsvpEventCheckboxes");
       evBox.innerHTML = "";
       rsvpCheck.innerHTML = "";
 
-      state.events.forEach((ev, idx) => {
+      invitationData.events.forEach((ev, idx) => {
         if (!ev.title) return;
         evBox.innerHTML += `
           <div class="bg-[#f4efe6]/70 border border-[#b5945b]/30 rounded-xl p-4 relative">
@@ -356,7 +324,7 @@
     let timerInterval;
     function startCountdown() {
       if (timerInterval) clearInterval(timerInterval);
-      const target = new Date(state.mainDate + "T17:00:00").getTime();
+      const target = new Date(invitationData.mainDate + "T17:00:00").getTime();
 
       const update = () => {
         const now = new Date().getTime();
@@ -373,26 +341,11 @@
     function submitRSVP(e) {
       e.preventDefault();
       const name = document.getElementById("rsvpName").value;
-      const attend = document.getElementById("rsvpAttend").value;
-      const guests = document.getElementById("rsvpGuests").value;
-      const note = document.getElementById("rsvpNote").value;
-      const selectedEvents = Array.from(document.querySelectorAll('input[name="rsvpEv"]:checked')).map(cb => cb.value).join(", ");
-
-      const msg = `*Wedding RSVP: ${state.groom} & ${state.bride}*%0A` +
-                  `👤 *Name:* ${name}%0A` +
-                  `✨ *Status:* ${attend}%0A` +
-                  `👥 *Guests:* ${guests}%0A` +
-                  `🎉 *Events:* ${selectedEvents}%0A` +
-                  `💌 *Message:* ${note || "Best wishes!"}`;
-
-      if (state.phone) {
-        window.open(`https://wa.me/${state.phone.replace(/[^0-9]/g, "")}?text=${msg}`, "_blank");
-      } else {
-        alert(`Thank you, ${name}! Your RSVP has been recorded.`);
-      }
+      alert(`Thank you, ${name}! Your RSVP has been successfully recorded.`);
+      document.getElementById("rsvpForm").reset();
     }
 
-    window.addEventListener("DOMContentLoaded", loadState);
+    window.addEventListener("DOMContentLoaded", initCard);
   </script>
 </body>
 </html>
