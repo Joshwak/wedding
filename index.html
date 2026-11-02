@@ -100,14 +100,14 @@
 
   <!-- Top Bar Controls -->
   <div class="fixed top-3 right-3 z-45 flex items-center gap-2">
-    <button onclick="requestHostAccess()" title="Host Unlock" class="bg-white/90 backdrop-blur border border-[#b5945b]/40 text-[#8c6d3b] px-3.5 py-2 rounded-full flex items-center gap-1.5 text-xs shadow-sm hover:bg-white transition font-medium cursor-pointer">
-      <span>🔒 Host Login</span>
+    <button onclick="promptPin()" title="Host Portal" class="bg-white/90 backdrop-blur border border-[#b5945b]/40 text-[#8c6d3b] px-3.5 py-2 rounded-full flex items-center gap-1.5 text-xs shadow-sm hover:bg-white transition font-medium">
+      <span>🔒 Host Portal</span>
     </button>
   </div>
 
   <!-- Main Arch Card Container -->
   <main class="w-full max-w-lg arch-card p-3 sm:p-5 my-6">
-    <div class="arch-inner-border w-full h-full px-5 py-12 sm:px-10 sm:py-16 flex flex-col items-center text-center relative" style="padding-top: 3rem; padding-bottom: 3rem;">
+    <div class="arch-inner-border w-full h-full px-5 py-12 sm:px-10 sm:py-16 flex flex-col items-center text-center relative">
 
       <!-- Top Right Pastel Floral SVG -->
       <svg class="w-40 h-40 sm:w-48 sm:h-48 absolute -top-4 -right-4 pointer-events-none floral-float opacity-90" viewBox="0 0 200 200" fill="none">
@@ -126,19 +126,13 @@
         <circle cx="40" cy="45" r="14" fill="#fffdfa" stroke="#e6dec8" stroke-width="1.2"/>
       </svg>
 
-      <!-- Personal Guest Name Badge -->
-      <div id="guestBadgeContainer" class="hidden mb-4 px-4 py-1.5 bg-[#f4efe6] border border-[#b5945b]/30 rounded-full">
-        <span class="text-[10px] tracking-[0.2em] uppercase text-[#7a7064]">Prepared Specially For</span>
-        <div id="dispGuestName" class="font-serif-title text-sm sm:text-base font-semibold text-[#8c6d3b]"></div>
-      </div>
-
       <!-- Header Intro -->
-      <p id="dispIntro" class="text-[11px] sm:text-xs tracking-[0.25em] uppercase text-[#7a7064] max-w-xs leading-relaxed mt-2 mb-6">
+      <p id="dispIntro" class="text-[11px] sm:text-xs tracking-[0.25em] uppercase text-[#7a7064] max-w-xs leading-relaxed mt-4 mb-6">
         TOGETHER WITH THEIR FAMILIES
       </p>
 
       <!-- Groom & Bride Names -->
-      <div class="my-2 w-full flex flex-col items-center justify-center space-y-2">
+      <div class="my-4 w-full flex flex-col items-center justify-center space-y-2">
         <div id="dispGroom" class="flex items-baseline justify-center">
           <span class="initial-swash">J</span><span class="name-rest">OSHWA</span>
         </div>
@@ -199,7 +193,7 @@
         </div>
       </div>
 
-      <!-- WEDDING EVENTS SECTION -->
+      <!-- 3 WEDDING EVENTS SECTION -->
       <div class="w-full mt-4 mb-8">
         <h2 class="font-script text-3xl sm:text-4xl text-[#8c6d3b] mb-1">Wedding Events</h2>
         <p class="text-[10px] tracking-[0.22em] uppercase text-[#7a7064] mb-5">CELEBRATION SCHEDULE</p>
@@ -281,20 +275,298 @@
     </div>
   </main>
 
-  <!-- ALWAYS-VISIBLE HOST CUSTOMIZATION TAB (Unlocked via PIN 8282) -->
-  <div id="hostCustomizationTab" class="w-full max-w-lg bg-[#fbf9f5] border border-[#b5945b]/40 rounded-2xl p-6 shadow-xl mb-12 hidden">
-    <div class="flex items-center justify-between border-b border-[#b5945b]/20 pb-3 mb-4">
-      <h3 class="font-serif-title text-base font-semibold text-[#8c6d3b]">⚙️ Host Customization Panel (Unlocked)</h3>
-      <button onclick="lockHostTab()" class="text-xs text-red-600 font-medium underline cursor-pointer">Lock Panel</button>
-    </div>
-
-    <div class="space-y-4 text-xs">
-      <div>
-        <label class="block font-semibold uppercase text-[#7a7064] mb-1">Guest Name (Optional — for personalized link)</label>
-        <input id="inGuestName" type="text" placeholder="e.g. Uncle Ahmed / Sarah & Family" class="w-full bg-white border border-[#b5945b]/30 rounded-lg px-3 py-2" />
+  <!-- HOST ADMIN EDITOR MODAL (Protected by PIN 8282) -->
+  <div id="editorModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#fbf9f5] border border-[#b5945b]/40 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-[#b5945b]/20 pb-3 mb-4">
+        <h3 class="font-serif-title text-lg font-semibold text-[#4a4238]">Host Portal & Customization</h3>
+        <button onclick="closeEditor()" class="text-gray-500 hover:text-black text-xl">&times;</button>
       </div>
 
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block font-semibold uppercase text-[#7a7064] mb-1">Groom's Name (Top)</label>
-          <input id="inGroom" type="text" class
+      <div class="space-y-4 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold uppercase text-[#7a7064] mb-1">Groom's Name (Top)</label>
+            <input id="inGroom" type="text" class="w-full border rounded-lg px-3 py-2" />
+          </div>
+          <div>
+            <label class="block font-semibold uppercase text-[#7a7064] mb-1">Bride's Name (Bottom)</label>
+            <input id="inBride" type="text" class="w-full border rounded-lg px-3 py-2" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold uppercase text-[#7a7064] mb-1">Nikah / Main Date</label>
+            <input id="inMainDate" type="date" class="w-full border rounded-lg px-3 py-2" />
+          </div>
+          <div>
+            <label class="block font-semibold uppercase text-[#7a7064] mb-1">WhatsApp RSVP Phone</label>
+            <input id="inPhone" type="text" placeholder="e.g. 923001234567" class="w-full border rounded-lg px-3 py-2" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold uppercase text-[#7a7064] mb-1">Main Venue Title</label>
+            <input id="inVenue" type="text" class="w-full border rounded-lg px-3 py-2" />
+          </div>
+          <div>
+            <label class="block font-semibold uppercase text-[#7a7064] mb-1">City / Address</label>
+            <input id="inCity" type="text" class="w-full border rounded-lg px-3 py-2" />
+          </div>
+        </div>
+
+        <hr class="border-[#b5945b]/20 my-2" />
+
+        <!-- Event 1 -->
+        <div class="bg-white p-3 rounded-xl border border-[#b5945b]/30 space-y-2">
+          <div class="font-semibold text-[#8c6d3b] uppercase">Event 1 Details</div>
+          <input id="ev1Title" type="text" placeholder="Event 1 Name" class="w-full border rounded px-2.5 py-1.5" />
+          <div class="grid grid-cols-2 gap-2">
+            <input id="ev1Date" type="text" placeholder="Date" class="border rounded px-2.5 py-1.5" />
+            <input id="ev1Time" type="text" placeholder="Time" class="border rounded px-2.5 py-1.5" />
+          </div>
+          <input id="ev1Venue" type="text" placeholder="Venue & Address" class="w-full border rounded px-2.5 py-1.5" />
+        </div>
+
+        <!-- Event 2 -->
+        <div class="bg-white p-3 rounded-xl border border-[#b5945b]/30 space-y-2">
+          <div class="font-semibold text-[#8c6d3b] uppercase">Event 2 Details</div>
+          <input id="ev2Title" type="text" placeholder="Event 2 Name" class="w-full border rounded px-2.5 py-1.5" />
+          <div class="grid grid-cols-2 gap-2">
+            <input id="ev2Date" type="text" placeholder="Date" class="border rounded px-2.5 py-1.5" />
+            <input id="ev2Time" type="text" placeholder="Time" class="border rounded px-2.5 py-1.5" />
+          </div>
+          <input id="ev2Venue" type="text" placeholder="Venue & Address" class="w-full border rounded px-2.5 py-1.5" />
+        </div>
+
+        <!-- Event 3 -->
+        <div class="bg-white p-3 rounded-xl border border-[#b5945b]/30 space-y-2">
+          <div class="font-semibold text-[#8c6d3b] uppercase">Event 3 Details (Nikah)</div>
+          <input id="ev3Title" type="text" placeholder="Event 3 Name" class="w-full border rounded px-2.5 py-1.5" />
+          <div class="grid grid-cols-2 gap-2">
+            <input id="ev3Date" type="text" placeholder="Date" class="border rounded px-2.5 py-1.5" />
+            <input id="ev3Time" type="text" placeholder="Time" class="border rounded px-2.5 py-1.5" />
+          </div>
+          <input id="ev3Venue" type="text" placeholder="Venue & Address" class="w-full border rounded px-2.5 py-1.5" />
+        </div>
+
+        <div class="flex gap-2 pt-3">
+          <button onclick="saveChanges()" class="flex-1 bg-[#8c6d3b] text-white py-2.5 rounded-lg font-medium">Save & Apply</button>
+          <button onclick="shareGuestLink()" class="flex-1 bg-[#4a4238] text-white py-2.5 rounded-lg font-medium">Copy Guest Link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const HOST_PIN = "8282";
+
+    const defaultData = {
+      groom: "Joshwa",
+      bride: "Ribeca",
+      mainDate: "2026-12-11",
+      venue: "Royal Palm Hall",
+      city: "Main Boulevard, Lahore",
+      phone: "",
+      events: [
+        { title: "Mehndi Night", date: "Tuesday, Dec 9, 2026", time: "7:00 PM Onwards", venue: "Royal Palm Lawn A" },
+        { title: "Barat Celebration", date: "Wednesday, Dec 10, 2026", time: "8:00 PM Onwards", venue: "Grand Marquee Hall" },
+        { title: "Nikah Ceremony", date: "Thursday, Dec 11, 2026", time: "5:00 PM Onwards", venue: "Crystal Ballroom" }
+      ]
+    };
+
+    let state = { ...defaultData };
+
+    function loadState() {
+      const params = new URLSearchParams(window.location.search);
+      const saved = localStorage.getItem("weddingCardState_v6");
+      if (saved) {
+        try { state = JSON.parse(saved); } catch(e) {}
+      }
+
+      if (params.get("g")) state.groom = params.get("g");
+      if (params.get("b")) state.bride = params.get("b");
+      if (params.get("d")) state.mainDate = params.get("d");
+      if (params.get("v")) state.venue = params.get("v");
+      if (params.get("c")) state.city = params.get("c");
+      if (params.get("p")) state.phone = params.get("p");
+      if (params.get("ev")) {
+        try { state.events = JSON.parse(decodeURIComponent(params.get("ev"))); } catch(e) {}
+      }
+
+      renderCard();
+    }
+
+    function formatSwashName(name) {
+      const clean = (name || "Name").trim();
+      const first = clean.charAt(0).toUpperCase();
+      const rest = clean.slice(1).toUpperCase();
+      return `<span class="initial-swash">${first}</span><span class="name-rest">${rest}</span>`;
+    }
+
+    function renderCard() {
+      document.getElementById("dispGroom").innerHTML = formatSwashName(state.groom);
+      document.getElementById("dispBride").innerHTML = formatSwashName(state.bride);
+      document.getElementById("summaryVenue").textContent = state.venue;
+      document.getElementById("summaryCity").textContent = state.city;
+      document.title = `Wedding Invitation | ${state.groom} & ${state.bride}`;
+
+      if (state.events && state.events[2]) {
+        document.getElementById("summaryDate").textContent = state.events[2].date.toUpperCase();
+        document.getElementById("summaryTime").textContent = state.events[2].time.toUpperCase();
+      }
+
+      document.getElementById("mapBtn").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(state.venue + ' ' + state.city)}`;
+
+      const evBox = document.getElementById("eventsContainer");
+      const rsvpCheck = document.getElementById("rsvpEventCheckboxes");
+      evBox.innerHTML = "";
+      rsvpCheck.innerHTML = "";
+
+      state.events.forEach((ev, idx) => {
+        if (!ev.title) return;
+        evBox.innerHTML += `
+          <div class="bg-[#f4efe6]/70 border border-[#b5945b]/30 rounded-xl p-4 relative">
+            <div class="text-[10px] tracking-[0.2em] uppercase text-[#8c6d3b] font-semibold">EVENT 0${idx + 1}</div>
+            <div class="font-serif-title text-base sm:text-lg text-[#4a4238] font-semibold mt-0.5">${ev.title}</div>
+            <div class="text-xs text-[#7a7064] mt-1">📅 ${ev.date} &nbsp;|&nbsp; 🕒 ${ev.time}</div>
+            <div class="text-xs text-[#4a4238] mt-1 font-medium">📍 ${ev.venue}</div>
+          </div>
+        `;
+
+        rsvpCheck.innerHTML += `
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="rsvpEv" value="${ev.title}" checked class="accent-[#8c6d3b] rounded" />
+            <span>${ev.title} (${ev.date})</span>
+          </label>
+        `;
+      });
+
+      startCountdown();
+    }
+
+    let timerInterval;
+    function startCountdown() {
+      if (timerInterval) clearInterval(timerInterval);
+      const target = new Date(state.mainDate + "T17:00:00").getTime();
+
+      const update = () => {
+        const now = new Date().getTime();
+        const diff = Math.max(0, target - now);
+        document.getElementById("cdDays").textContent = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, "0");
+        document.getElementById("cdHours").textContent = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, "0");
+        document.getElementById("cdMins").textContent = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, "0");
+        document.getElementById("cdSecs").textContent = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
+      };
+      update();
+      timerInterval = setInterval(update, 1000);
+    }
+
+    function promptPin() {
+      const entered = prompt("Enter Host PIN (8282) to open Host Portal:");
+      if (entered === HOST_PIN) {
+        openEditor();
+      } else if (entered !== null) {
+        alert("Incorrect PIN.");
+      }
+    }
+
+    function openEditor() {
+      document.getElementById("inGroom").value = state.groom;
+      document.getElementById("inBride").value = state.bride;
+      document.getElementById("inMainDate").value = state.mainDate;
+      document.getElementById("inVenue").value = state.venue;
+      document.getElementById("inCity").value = state.city;
+      document.getElementById("inPhone").value = state.phone || "";
+
+      for (let i = 0; i < 3; i++) {
+        const ev = state.events[i] || { title: "", date: "", time: "", venue: "" };
+        document.getElementById(`ev${i+1}Title`).value = ev.title;
+        document.getElementById(`ev${i+1}Date`).value = ev.date;
+        document.getElementById(`ev${i+1}Time`).value = ev.time;
+        document.getElementById(`ev${i+1}Venue`).value = ev.venue;
+      }
+
+      document.getElementById("editorModal").classList.remove("hidden");
+    }
+
+    function closeEditor() {
+      document.getElementById("editorModal").classList.add("hidden");
+    }
+
+    function saveChanges() {
+      state.groom = document.getElementById("inGroom").value || "Joshwa";
+      state.bride = document.getElementById("inBride").value || "Ribeca";
+      state.mainDate = document.getElementById("inMainDate").value || "2026-12-11";
+      state.venue = document.getElementById("inVenue").value;
+      state.city = document.getElementById("inCity").value;
+      state.phone = document.getElementById("inPhone").value;
+
+      state.events = [1, 2, 3].map(i => ({
+        title: document.getElementById(`ev${i}Title`).value,
+        date: document.getElementById(`ev${i}Date`).value,
+        time: document.getElementById(`ev${i}Time`).value,
+        venue: document.getElementById(`ev${i}Venue`).value
+      }));
+
+      localStorage.setItem("weddingCardState_v6", JSON.stringify(state));
+      renderCard();
+      closeEditor();
+      alert("Changes saved locally on this device!");
+    }
+
+    function buildGuestUrl() {
+      const base = window.location.origin + window.location.pathname;
+      const params = new URLSearchParams();
+      params.set("g", state.groom);
+      params.set("b", state.bride);
+      params.set("d", state.mainDate);
+      params.set("v", state.venue);
+      params.set("c", state.city);
+      if (state.phone) params.set("p", state.phone);
+      params.set("ev", encodeURIComponent(JSON.stringify(state.events)));
+      return `${base}?${params.toString()}`;
+    }
+
+    function shareGuestLink() {
+      const url = buildGuestUrl();
+      if (navigator.share) {
+        navigator.share({
+          title: `${state.groom} & ${state.bride} - Wedding Invitation`,
+          text: `You are cordially invited to the wedding celebration of ${state.groom} & ${state.bride}!`,
+          url: url
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(url);
+        alert("Locked guest invitation link copied to clipboard!");
+      }
+    }
+
+    function submitRSVP(e) {
+      e.preventDefault();
+      const name = document.getElementById("rsvpName").value;
+      const attend = document.getElementById("rsvpAttend").value;
+      const guests = document.getElementById("rsvpGuests").value;
+      const note = document.getElementById("rsvpNote").value;
+      const selectedEvents = Array.from(document.querySelectorAll('input[name="rsvpEv"]:checked')).map(cb => cb.value).join(", ");
+
+      const msg = `*Wedding RSVP: ${state.groom} & ${state.bride}*%0A` +
+                  `👤 *Name:* ${name}%0A` +
+                  `✨ *Status:* ${attend}%0A` +
+                  `👥 *Guests:* ${guests}%0A` +
+                  `🎉 *Events:* ${selectedEvents}%0A` +
+                  `💌 *Message:* ${note || "Best wishes!"}`;
+
+      if (state.phone) {
+        window.open(`https://wa.me/${state.phone.replace(/[^0-9]/g, "")}?text=${msg}`, "_blank");
+      } else {
+        alert(`Thank you, ${name}! Your RSVP has been recorded.`);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadState);
+  </script>
+</body>
+</html>
