@@ -98,13 +98,10 @@
 </head>
 <body class="min-h-screen py-6 px-3 sm:py-12 sm:px-6 flex flex-col items-center justify-center relative">
 
-  <!-- Top Bar Controls (Customize Button Removed - Locked Behind PIN 8282) -->
+  <!-- Top Bar Controls (Protected by Lock PIN 8282) -->
   <div class="fixed top-3 right-3 z-40 flex items-center gap-2">
-    <button onclick="shareGuestLink()" class="bg-white/90 backdrop-blur border border-[#b5945b]/40 text-[#6e552c] text-xs font-medium px-3.5 py-2 rounded-full shadow-sm hover:bg-white transition flex items-center gap-1.5">
-      <span>🔗 Share Link</span>
-    </button>
-    <button onclick="promptPin()" title="Host Lock" class="bg-white/80 backdrop-blur border border-[#b5945b]/30 text-[#8c6d3b] w-8 h-8 rounded-full flex items-center justify-center text-xs shadow-sm hover:bg-white transition">
-      🔒
+    <button onclick="promptPin()" title="Host Lock / Share" class="bg-white/90 backdrop-blur border border-[#b5945b]/40 text-[#8c6d3b] px-3.5 py-2 rounded-full flex items-center gap-1.5 text-xs shadow-sm hover:bg-white transition font-medium">
+      <span>🔒 Host Portal</span>
     </button>
   </div>
 
@@ -182,4 +179,4 @@
       <div id="countdownBox" class="grid grid-cols-4 gap-3 w-full max-w-xs my-6">
         <div class="bg-[#f4efe6] rounded-xl py-2.5 px-1 border border-[#b5945b]/20">
           <div id="cdDays" class="text-lg sm:text-xl font-serif-title text-[#8c6d3b] font-semibold">00</div>
-          <div
+          <div class="text
