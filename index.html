@@ -98,10 +98,13 @@
 </head>
 <body class="min-h-screen py-6 px-3 sm:py-12 sm:px-6 flex flex-col items-center justify-center relative">
 
-  <!-- Top Bar Controls (Protected by Lock PIN 8282) -->
+  <!-- Top Bar Controls (Customize Button Removed - Locked Behind PIN 8282) -->
   <div class="fixed top-3 right-3 z-40 flex items-center gap-2">
-    <button onclick="promptPin()" title="Host Lock / Share" class="bg-white/90 backdrop-blur border border-[#b5945b]/40 text-[#8c6d3b] px-3.5 py-2 rounded-full flex items-center gap-1.5 text-xs shadow-sm hover:bg-white transition font-medium">
-      <span>🔒 Host Portal</span>
+    <button onclick="shareGuestLink()" class="bg-white/90 backdrop-blur border border-[#b5945b]/40 text-[#6e552c] text-xs font-medium px-3.5 py-2 rounded-full shadow-sm hover:bg-white transition flex items-center gap-1.5">
+      <span>🔗 Share Link</span>
+    </button>
+    <button onclick="promptPin()" title="Host Lock" class="bg-white/80 backdrop-blur border border-[#b5945b]/30 text-[#8c6d3b] w-8 h-8 rounded-full flex items-center justify-center text-xs shadow-sm hover:bg-white transition">
+      🔒
     </button>
   </div>
 
@@ -281,7 +284,7 @@
   <div id="editorModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-[#fbf9f5] border border-[#b5945b]/40 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl">
       <div class="flex items-center justify-between border-b border-[#b5945b]/20 pb-3 mb-4">
-        <h3 class="font-serif-title text-lg font-semibold text-[#4a4238]">Host Admin & Customization</h3>
+        <h3 class="font-serif-title text-lg font-semibold text-[#4a4238]">Customize Wedding Invitation</h3>
         <button onclick="closeEditor()" class="text-gray-500 hover:text-black text-xl">&times;</button>
       </div>
 
@@ -466,7 +469,7 @@
     }
 
     function promptPin() {
-      const entered = prompt("Enter Host PIN (8282) to open Host Portal & Customize:");
+      const entered = prompt("Enter Host PIN to unlock editing:");
       if (entered === HOST_PIN) {
         openEditor();
       } else if (entered !== null) {
@@ -541,7 +544,7 @@
         }).catch(() => {});
       } else {
         navigator.clipboard.writeText(url);
-        alert("Guest invitation link copied to clipboard!");
+        alert("Guest invitation link copied!");
       }
     }
 
